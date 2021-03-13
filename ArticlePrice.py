@@ -1,6 +1,7 @@
 import selenium
 import datetime
 import pickle
+import yaml
 import os
 from datetime import datetime
 from selenium import webdriver
@@ -9,7 +10,8 @@ from pandas_datareader._utils import RemoteDataError
 
 class SeekingAlpha:
     def __init__(self, link):
-        self.driver = webdriver.Chrome("/Users/jackturner/Desktop/Development/Stock-Bot/chromedriver")
+        self.driver_path = self.get_driver_path()
+        self.driver = webdriver.Chrome(self.driver_path)
         
         try:
 
@@ -26,6 +28,12 @@ class SeekingAlpha:
         finally: 
 
             self.driver.quit()
+
+    def get_driver_path(self):
+        """Gets the path from the params.yaml file"""
+        with open('params.yaml') as f:
+            data = yaml.load(f, Loader=yaml.FullLoader)
+        return data["chrome_driver_path"]
     
     def load_cookies(self):
         """Loads cookies from the pickle cookies file. Browser needs to exist already"""
